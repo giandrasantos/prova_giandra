@@ -1,6 +1,40 @@
-use saep_db;
+CREATE DATABASE IF NOT EXISTS saep_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE saep_db;
+CREATE TABLE usuarios (
+id INT AUTO_INCREMENT PRIMARY KEY,
+nome VARCHAR(100) NOT NULL,
+login VARCHAR(60) NOT NULL UNIQUE,
+senha_hash VARCHAR(255) NOT NULL
+) ENGINE=InnoDB;
+CREATE TABLE tutores (
+id INT AUTO_INCREMENT PRIMARY KEY,
+nome VARCHAR(120) NOT NULL,
+cpf_criptografado TEXT NOT NULL,
+telefone VARCHAR(20) NOT NULL,
+email VARCHAR(120) NOT NULL
+) ENGINE=InnoDB;
+CREATE TABLE pets (
+id INT AUTO_INCREMENT PRIMARY KEY,
+nome VARCHAR(100) NOT NULL,
+especie VARCHAR(50) NOT NULL,
+raca VARCHAR(80) NOT NULL,
+data_nascimento DATE NOT NULL,
+tutor_id INT NOT NULL,
+CONSTRAINT fk_pet_tutor FOREIGN KEY (tutor_id)
+REFERENCES tutores(id) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB;
+CREATE TABLE agendamentos (
+id INT AUTO_INCREMENT PRIMARY KEY,
+pet_id INT NOT NULL,
+data_hora DATETIME NOT NULL,
+motivo VARCHAR(255) NOT NULL,
+observacoes TEXT NOT NULL,
+CONSTRAINT fk_agendamento_pet FOREIGN KEY (pet_id)
+REFERENCES pets(id) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB;
 INSERT INTO usuarios VALUES (1, 'Administrador', 'admin',
 '$2b$12$G3u2JYle3DwdtBB3JUfD4eMvYHkL2p2ry8D0zxTl0m2zj1KBWT0si');
+
 INSERT INTO usuarios VALUES (2, 'Recepção', 'recepcao',
 '$2b$12$IniF9Wusd.PODBe4pXHwxeoKz.i/ILI.uql7zmxgiBhVm9ZSaE3zy');
 INSERT INTO usuarios VALUES (3, 'Veterinário', 'vet',
